@@ -133,7 +133,7 @@ components:
         componentName: github.com/istio/istio/gateway
         version: {{ .ISTIO_VERSION }}
       - name: keycloak
-        componentName: github.com/bitnami/keycloak
+        componentName: github.com/platform-mesh/keycloak
         version: {{ .KEYCLOAK_VERSION }}
       - name: kcp-operator
         componentName: github.com/kcp-dev/kcp-operator
