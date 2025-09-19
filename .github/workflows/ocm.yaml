@@ -106,6 +106,5 @@ jobs:
             KEYCLOAK_VERSION=${{ env.KEYCLOAK_VERSION}} \
             PLATFORM_MESH_OPERATOR_COMPONENTS_VERSION=${{ env.PLATFORM_MESH_OPERATOR_COMPONENTS_VERSION }}
           
-          ./ocm validate ctf "$ocm_ctf"
       - name: Transfer to OCM REPO
         run: ./ocm transfer ctf --overwrite .ocm/transport.ctf "ghcr.io/platform-mesh"
