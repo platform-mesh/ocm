@@ -72,7 +72,6 @@ components:
           helmChart: kcp-operator:{{ .KCP_OPERATOR_VERSION }}
           helmRepository: https://kcp-dev.github.io/helm-charts
   - name: github.com/kcp-dev/kcp
-    description: Replaces the github.com/kcp-dev/kcp-operator component and also include kcp image
     version: {{ .KCP_VERSION }}
     provider:
       name: kcp
