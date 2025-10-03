@@ -71,6 +71,26 @@ components:
           type: helm
           helmChart: kcp-operator:{{ .KCP_OPERATOR_VERSION }}
           helmRepository: https://kcp-dev.github.io/helm-charts
+  - name: github.com/kcp-dev/kcp
+    description: Replaces the github.com/kcp-dev/kcp-operator component and also include kcp image
+    version: {{ .KCP_VERSION }}
+    provider:
+      name: kcp
+    resources:
+      - name: chart
+        type: helmChart
+        version: {{ .KCP_OPERATOR_VERSION }}
+        access:
+          type: helm
+          helmChart: kcp-operator:{{ .KCP_OPERATOR_VERSION }}
+          helmRepository: https://kcp-dev.github.io/helm-charts
+      - name: image
+        type: ociImage
+        relation: external
+        version: 0.0.0-{{ .KCP_IMAGE_VERSION }}
+        access:
+          type: ociArtifact
+          imageReference: "ghcr.io/kcp-dev/kcp:{{ .KCP_IMAGE_VERSION }}"
   - name: github.com/gardener/etcd-druid
     version: {{ .GARDENER_ETCD_DRUID_SOURCE_REF }}
     provider:
