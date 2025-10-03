@@ -146,6 +146,9 @@ components:
       - name: kcp-operator
         componentName: github.com/kcp-dev/kcp-operator
         version: {{ .KCP_OPERATOR_VERSION }}
+      - name: kcp
+        componentName: github.com/kcp-dev/kcp
+        version: {{ .KCP_VERSION }}
       - name: kubernetes-graphql-gateway
         componentName: github.com/platform-mesh/kubernetes-graphql-gateway
         version: {{ .KUBERNETES_GRAPHQL_GATEWAY_VERSION }}
