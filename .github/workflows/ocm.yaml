@@ -303,8 +303,7 @@ jobs:
             KEYCLOAK_VERSION=${{ env.KEYCLOAK_VERSION}} \
             PLATFORM_MESH_OPERATOR_COMPONENTS_VERSION=${{ env.PLATFORM_MESH_OPERATOR_COMPONENTS_VERSION }} \
             EXAMPLE_HTTPBIN_OPERATOR_VERSION=${{ env.EXAMPLE_HTTPBIN_OPERATOR_VERSION }} \
-            IAM_SERVICE_VERSION=0.0.0 \
-            IAM_SERVICE_IMAGE_VERSION=v0.8.4
+            IAM_SERVICE_VERSION=0.8.28
 
       - name: Transfer to OCM REPO
         if: steps.version_check.outputs.needs_update == 'true'
