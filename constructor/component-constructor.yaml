@@ -98,6 +98,25 @@ components:
         access:
           type: ociArtifact
           imageReference: "europe-docker.pkg.dev/gardener-project/public/gardener/etcd-druid:{{ .GARDENER_ETCD_DRUID_SOURCE_REF }}"
+  - name: github.com/platform-mesh/iam-service
+    version: {{ .IAM_SERVICE_VERSION }}
+    provider:
+      name: platform-mesh
+    resources:
+      # - name: chart
+      #   type: helmChart
+      #   version: {{ .IAM_SERVICE_VERSION }}
+      #   access:
+      #     type: helm
+      #     helmChart: iam-service:{{ .IAM_SERVICE_VERSION }}
+      #     ociRepository: ghcr.io/platform-mesh
+      - name: image
+        type: ociImage
+        relation: external
+        version: {{ .IAM_SERVICE_IMAGE_VERSION }}
+        access:
+          type: ociArtifact
+          imageReference: "ghcr.io/platform-mesh/iam-service{{ .IAM_SERVICE_IMAGE_VERSION }}"
   - name: github.com/platform-mesh/platform-mesh
     version: {{ .VERSION }}
     provider:
