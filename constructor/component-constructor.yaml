@@ -1,4 +1,16 @@
 components:
+  - name: github.com/kubernetes-sigs/gateway-api
+    version: {{ .GATEWAY_API_VERSION }}
+    provider:
+      name: gateway-api
+    resources:
+      - name: crds
+        type: gitOpsTemplate
+        version: {{ .GATEWAY_API_VERSION }}
+        access:
+          type: github
+          repoUrl: https://github.com/kubernetes-sigs/gateway-api
+          ref: {{ .GATEWAY_API_VERSION }}
   - name: github.com/crossplane/crossplane
     version: {{ .CROSSPLANE_VERSION }}
     provider:
