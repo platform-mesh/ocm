@@ -10,7 +10,19 @@ components:
         access:
           type: github
           repoUrl: https://github.com/kubernetes-sigs/gateway-api
-          ref: {{ .GATEWAY_API_VERSION }}
+          commit: {{ .GATEWAY_API_COMMIT }}
+  - name: github.com/traefik/traefik-helm-chart
+    version: {{ .TRAEFIK_VERSION }}
+    provider:
+      name: traefik
+    resources:
+      - name: chart
+        type: helmChart
+        version: {{ .TRAEFIK_VERSION }}
+        access:
+          type: helm
+          helmChart: traefik:{{ .TRAEFIK_VERSION }}
+          helmRepository: https://traefik.github.io/charts
   - name: github.com/crossplane/crossplane
     version: {{ .CROSSPLANE_VERSION }}
     provider:
@@ -184,3 +196,9 @@ components:
       - name: marketplace-ui
         componentName: github.com/platform-mesh/marketplace-ui
         version: {{ .MARKETPLACE_UI_VERSION }}
+      - name: gateway-api
+        componentName: github.com/kubernetes-sigs/gateway-api
+        version: {{ .GATEWAY_API_VERSION }}
+      - name: traefik
+        componentName: github.com/traefik/traefik-helm-chart
+        version: {{ .TRAEFIK_VERSION }}
