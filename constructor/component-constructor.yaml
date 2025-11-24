@@ -40,8 +40,9 @@ components:
         type: helmChart
         version: {{ .CERT_MANAGER_VERSION }}
         access:
-          type: ociArtifact
-          imageReference: quay.io/jetstack/charts/cert-manager:{{ .CERT_MANAGER_VERSION }}
+          type: helm
+          helmChart: cert-manager:{{ .CERT_MANAGER_VERSION }}
+          helmRepository: https://charts.jetstack.io
   - name: github.com/crossplane/crossplane
     version: {{ .CROSSPLANE_VERSION }}
     provider:
