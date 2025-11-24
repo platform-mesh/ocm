@@ -10,7 +10,7 @@ components:
         access:
           type: github
           repoUrl: https://github.com/kubernetes-sigs/gateway-api
-          commit: {{ .GATEWAY_API_COMMIT }}
+          ref: {{ .GATEWAY_API_VERSION }}
   - name: github.com/traefik/traefik-helm-chart
     version: {{ .TRAEFIK_VERSION }}
     provider:
@@ -196,9 +196,3 @@ components:
       - name: marketplace-ui
         componentName: github.com/platform-mesh/marketplace-ui
         version: {{ .MARKETPLACE_UI_VERSION }}
-      - name: gateway-api
-        componentName: github.com/kubernetes-sigs/gateway-api
-        version: {{ .GATEWAY_API_VERSION }}
-      - name: traefik
-        componentName: github.com/traefik/traefik-helm-chart
-        version: {{ .TRAEFIK_VERSION }}
