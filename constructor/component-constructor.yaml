@@ -31,7 +31,7 @@ components:
           type: helm
           helmChart: traefik-crds:{{ .TRAEFIK_CRD_VERSION }}
           helmRepository: https://traefik.github.io/charts
-  - name: https://github.com/cert-manager/cert-manager
+  - name: github.com/cert-manager/cert-manager
     version: {{ .CERT_MANAGER_VERSION }}
     provider:
       name: cert-manager
