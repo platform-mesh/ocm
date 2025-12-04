@@ -1,6 +1,6 @@
 # Platform Mesh OCM Component Release Process
 
-This document describes how to create draft releases for the platform-mesh OCM component using the `/draft-release` slash command in Claude Code.
+This document describes how to create draft releases for the platform-mesh OCM component using the `./hack/draft-release.sh` script (or the `/draft-release` slash command when using Claude Code).
 
 ## Overview
 
@@ -33,37 +33,23 @@ The release process automates:
 
 ### Authentication
 
-1. **GitHub**: Must be authenticated with `gh` CLI
-   ```bash
-   gh auth login
-   ```
-
-2. **OCM Registry** (optional): Configure credentials for ghcr.io
-   ```bash
-   cat > ~/.ocmconfig << EOF
-   type: generic.config.ocm.software/v1
-   configurations:
-     - type: credentials.config.ocm.software
-       consumers:
-         - identity:
-             type: OCIRegistry
-             scheme: https
-             hostname: ghcr.io
-             pathprefix: platform-mesh
-           credentials:
-             - type: Credentials
-               properties:
-                 username: github
-                 password: <YOUR_GITHUB_TOKEN>
-   EOF
-   ```
+**GitHub**: Must be authenticated with `gh` CLI
+```bash
+gh auth login
+```
 
 ## Usage
 
 ### Creating a Release
 
-To create a draft release for version 0.1.0:
+To create a draft release for version 0.1.0, you can either:
 
+**Using the script directly:**
+```bash
+./hack/draft-release.sh 0.0.0 0.1.0
+```
+
+**Using Claude Code slash command:**
 ```bash
 /draft-release 0.1.0
 ```
@@ -72,6 +58,12 @@ To create a draft release for version 0.1.0:
 
 To preview what would be created without actually creating the release:
 
+**Using the script directly:**
+```bash
+./hack/draft-release.sh 0.0.0 0.1.0 --dry-run
+```
+
+**Using Claude Code slash command:**
 ```bash
 /draft-release 0.1.0 --dry-run
 ```
@@ -84,7 +76,7 @@ This will:
 
 ### Process Flow
 
-When you run `/draft-release 0.1.0`, the following happens:
+When you run the draft release command (either `./hack/draft-release.sh 0.0.0 0.1.0` or `/draft-release 0.1.0`), the following happens:
 
 1. **Prerequisites Check** (~5 seconds)
    - Validates required tools are installed
