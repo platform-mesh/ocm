@@ -150,7 +150,7 @@ echo "" >&2
 echo "[1/4] Fetching package versions from registry..." >&2
 
 VERSIONS_JSON=$(gh api "/orgs/$ORG/packages/container/$PACKAGE_NAME_ENCODED/versions" \
-  --paginate --jq '.' 2>/dev/null || echo "[]")
+  --paginate 2>/dev/null | jq -s 'add' || echo "[]")
 
 if [[ "$VERSIONS_JSON" == "[]" ]] || [[ -z "$VERSIONS_JSON" ]]; then
   echo "Error: Could not fetch versions for package: $PACKAGE_PATH" >&2
@@ -259,10 +259,10 @@ for i in "${!VERSION_IDS[@]}"; do
   # Delete the version
   if gh api -X DELETE "/orgs/$ORG/packages/container/$PACKAGE_NAME_ENCODED/versions/$VERSION_ID" &> /dev/null; then
     echo " ✓" >&2
-    ((SUCCESS_COUNT++))
+    SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
   else
     echo " ✗" >&2
-    ((FAILURE_COUNT++))
+    FAILURE_COUNT=$((FAILURE_COUNT + 1))
     FAILED_VERSIONS+=("$TAG_NAME")
   fi
 
