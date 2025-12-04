@@ -228,6 +228,138 @@ Each script is modular and can be run independently for testing:
 2. **Edit**: Make any manual edits to the release notes if needed
 3. **Publish**: When ready, publish the draft release to make it official
 
+## Cleaning Up Old RC Versions
+
+After a stable release is published (e.g., 0.1.0), you may want to clean up old release candidate (RC) versions from the container registry to save space and reduce clutter.
+
+### Overview
+
+The cleanup tool allows you to delete RC or build versions from GitHub Container Registry (ghcr.io) in bulk, using a prefix and number range.
+
+### Prerequisites
+
+- **GitHub CLI (`gh`)**: Same as release process
+- **Authenticated**: Must be authenticated with `gh auth login`
+- **Permissions**: Need `packages: write` permission for the organization
+
+### Usage Options
+
+#### Option 1: Local Script
+
+Run the cleanup script directly from your machine:
+
+```bash
+# Dry run first (recommended) - preview what will be deleted
+./.github/scripts/cleanup-versions.sh \
+  --prefix "ghcr.io/platform-mesh/component-descriptors/github.com/platform-mesh/platform-mesh:0.1.0-rc." \
+  --range-start 0 \
+  --range-end 700 \
+  --dry-run
+
+# If the preview looks correct, run without --dry-run
+# You will be prompted for confirmation
+./.github/scripts/cleanup-versions.sh \
+  --prefix "ghcr.io/platform-mesh/component-descriptors/github.com/platform-mesh/platform-mesh:0.1.0-rc." \
+  --range-start 0 \
+  --range-end 700
+
+# Force deletion without confirmation (use with caution!)
+./.github/scripts/cleanup-versions.sh \
+  --prefix "ghcr.io/platform-mesh/component-descriptors/github.com/platform-mesh/platform-mesh:0.1.0-rc." \
+  --range-start 0 \
+  --range-end 700 \
+  --force
+```
+
+#### Option 2: GitHub Action (Recommended)
+
+Trigger the cleanup workflow from GitHub UI:
+
+1. Go to the **Actions** tab in GitHub
+2. Select **"Cleanup Package Versions"** workflow
+3. Click **"Run workflow"**
+4. Fill in the inputs:
+   - **Prefix**: `ghcr.io/platform-mesh/component-descriptors/github.com/platform-mesh/platform-mesh:0.1.0-rc.`
+   - **Range start**: `0`
+   - **Range end**: `700`
+   - **Preview only**: `true` (for dry-run) or `false` (to delete)
+5. Click **"Run workflow"**
+
+The workflow will show a summary of what was deleted in the job summary.
+
+### How It Works
+
+1. **Parse prefix**: Extracts registry, organization, package name, and tag prefix
+2. **Fetch versions**: Queries GitHub API for all package versions
+3. **Filter**: Matches versions in the specified range (e.g., 0.1.0-rc.0 through 0.1.0-rc.700)
+4. **Display**: Shows what will be deleted (first 10 and last 10 if more than 20)
+5. **Confirm**: Prompts for confirmation (unless `--force` or in GitHub Action)
+6. **Delete**: Removes versions one by one with progress indicator
+
+### Safety Features
+
+- **Dry-run by default**: GitHub Action defaults to preview mode
+- **Confirmation prompt**: Local script requires typing "yes" to proceed (unless `--force`)
+- **Detailed preview**: Shows exactly which versions will be deleted before proceeding
+- **Error handling**: Continues on individual failures and reports all errors at the end
+- **Rate limiting**: Adds delays when deleting large batches to avoid API rate limits
+
+### Common Use Cases
+
+#### Example 1: Cleanup after 0.1.0 release
+
+After releasing 0.1.0, delete all RC versions (0-700):
+
+```bash
+./.github/scripts/cleanup-versions.sh \
+  --prefix "ghcr.io/platform-mesh/component-descriptors/github.com/platform-mesh/platform-mesh:0.1.0-rc." \
+  --range-start 0 \
+  --range-end 700
+```
+
+#### Example 2: Keep only recent RCs
+
+Keep the last 50 RCs, delete everything before that (0-650):
+
+```bash
+./.github/scripts/cleanup-versions.sh \
+  --prefix "ghcr.io/platform-mesh/component-descriptors/github.com/platform-mesh/platform-mesh:0.1.0-rc." \
+  --range-start 0 \
+  --range-end 650
+```
+
+#### Example 3: Cleanup build versions
+
+Delete specific build versions:
+
+```bash
+./.github/scripts/cleanup-versions.sh \
+  --prefix "ghcr.io/platform-mesh/component-descriptors/github.com/platform-mesh/platform-mesh:0.2.0-build." \
+  --range-start 100 \
+  --range-end 500
+```
+
+### Troubleshooting
+
+#### "Could not fetch versions for package"
+
+- Verify the package exists at `ghcr.io/platform-mesh`
+- Check that you have access to the package
+- Ensure the package name in the prefix is correct
+- Confirm you're authenticated: `gh auth status`
+
+#### "No matching versions found"
+
+- The versions in the specified range don't exist
+- Check the tag prefix is correct (including the trailing dot if applicable)
+- Verify the range (start should be less than or equal to end)
+
+#### Rate limiting errors
+
+- The script automatically adds delays for large batches (>100 versions)
+- If you still hit rate limits, try smaller ranges
+- Wait for the rate limit to reset (usually 1 hour)
+
 ## Support
 
 For issues or questions:
