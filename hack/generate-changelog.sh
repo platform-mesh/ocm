@@ -168,11 +168,14 @@ fetch_pr_info_and_changelog() {
       continue
     fi
 
-    # Extract PR metadata (number, title, URL)
+    # Extract PR metadata (number, title, URL, author)
     local pr_info=$(echo "$pr_data" | jq '{
       number: .number,
       title: .title,
-      url: .html_url
+      url: .html_url,
+      author: .user.login,
+      author_url: .user.html_url,
+      avatar_url: .user.avatar_url
     }' 2>/dev/null || echo "{}")
 
     if [[ "$pr_info" != "{}" ]] && [[ "$pr_info" != "null" ]]; then

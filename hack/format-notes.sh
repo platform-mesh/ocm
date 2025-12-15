@@ -90,6 +90,42 @@ This release includes ${change_count} component update(s)$([ $breaking_count -gt
 EOF
   fi
 
+  # Contributors section
+  cat << 'EOF'
+## Contributors
+
+Thank you to all the contributors who made this release possible:
+
+EOF
+
+  # Collect unique contributors from all PRs across all components
+  local contributors=$(jq -r '[.changes[].pr_details[]? | {author: .author, author_url: .author_url, avatar_url: .avatar_url}] | unique_by(.author) | sort_by(.author)' "$changelog_file")
+  local contributor_count=$(echo "$contributors" | jq 'length')
+
+  if [[ "$contributor_count" -gt 0 ]]; then
+    # Render contributors with avatars in a compact format
+    echo "<div>"
+    echo ""
+    while IFS= read -r contributor; do
+      if [[ -n "$contributor" ]] && [[ "$contributor" != "null" ]]; then
+        local author=$(echo "$contributor" | jq -r '.author // ""')
+        local author_url=$(echo "$contributor" | jq -r '.author_url // ""')
+        local avatar_url=$(echo "$contributor" | jq -r '.avatar_url // ""')
+
+        if [[ -n "$author" ]] && [[ -n "$author_url" ]] && [[ -n "$avatar_url" ]]; then
+          echo "<a href=\"${author_url}\"><img src=\"${avatar_url}\" width=\"50\" height=\"50\" alt=\"${author}\" title=\"${author}\" style=\"border-radius: 50%; margin: 5px;\"></a>"
+        fi
+      fi
+    done < <(echo "$contributors" | jq -c '.[]')
+    echo ""
+    echo "</div>"
+    echo ""
+    echo "_${contributor_count} contributor(s)_"
+  else
+    echo "_No contributors found_"
+  fi
+  echo ""
+
   # Component Changes section
   if [[ $change_count -gt 0 ]]; then
     cat << EOF
@@ -215,9 +251,15 @@ EOF
             local pr_number=$(echo "$pr_json" | jq -r '.number // ""')
             local pr_title=$(echo "$pr_json" | jq -r '.title // ""')
             local pr_url=$(echo "$pr_json" | jq -r '.url // ""')
+            local pr_author=$(echo "$pr_json" | jq -r '.author // ""')
+            local pr_author_url=$(echo "$pr_json" | jq -r '.author_url // ""')
 
             if [[ -n "$pr_number" ]] && [[ -n "$pr_url" ]]; then
-              echo "- [#${pr_number}](${pr_url}): ${pr_title}"
+              if [[ -n "$pr_author" ]] && [[ -n "$pr_author_url" ]]; then
+                echo "- [#${pr_number}](${pr_url}): ${pr_title} by [@${pr_author}](${pr_author_url})"
+              else
+                echo "- [#${pr_number}](${pr_url}): ${pr_title}"
+              fi
             fi
           fi
         done <<< "$pr_details"
