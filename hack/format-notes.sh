@@ -181,6 +181,51 @@ EOF
         echo "</details>"
       fi
 
+      # Extract and display PR changelog items
+      local pr_changelogs=$(echo "$change" | jq -r '.pr_changelogs[]? // empty' 2>/dev/null)
+
+      if [[ -n "$pr_changelogs" ]]; then
+        echo ""
+        echo "**Key Changes:**"
+        echo ""
+        while IFS= read -r item; do
+          if [[ -n "$item" ]]; then
+            # Ensure item starts with a dash, add if missing
+            if [[ "$item" == -* ]]; then
+              echo "$item"
+            else
+              echo "- $item"
+            fi
+          fi
+        done <<< "$pr_changelogs"
+      fi
+
+      # Extract and display PR details as collapsible list
+      local pr_details=$(echo "$change" | jq -c '.pr_details[]? // empty' 2>/dev/null)
+
+      if [[ -n "$pr_details" ]]; then
+        local pr_count=$(echo "$change" | jq '.pr_details | length' 2>/dev/null || echo "0")
+        echo ""
+        echo "<details>"
+        echo "<summary>All Pull Requests (${pr_count})</summary>"
+        echo ""
+
+        while IFS= read -r pr_json; do
+          if [[ -n "$pr_json" ]]; then
+            local pr_number=$(echo "$pr_json" | jq -r '.number // ""')
+            local pr_title=$(echo "$pr_json" | jq -r '.title // ""')
+            local pr_url=$(echo "$pr_json" | jq -r '.url // ""')
+
+            if [[ -n "$pr_number" ]] && [[ -n "$pr_url" ]]; then
+              echo "- [#${pr_number}](${pr_url}): ${pr_title}"
+            fi
+          fi
+        done <<< "$pr_details"
+
+        echo ""
+        echo "</details>"
+      fi
+
       echo ""
 
     done <<< "$changes"
@@ -299,8 +344,5 @@ echo >&2
 
 format_release_notes "$TARGET_VERSION" "$VERSIONS_FILE" "$CHANGELOG_FILE" > "$OUTPUT_FILE"
 
-echo "Release notes formatted and saved to: $OUTPUT_FILE" >&2
+echo "✓ Release notes formatted and saved to: $OUTPUT_FILE" >&2
 echo >&2
-
-# Output to stdout as well
-cat "$OUTPUT_FILE"
