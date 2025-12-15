@@ -367,7 +367,7 @@ EOF
   cat << EOF
 ## Installation
 
-For installation instructions, see the [Getting Started Guide](https://platform-mesh.io/getting-started).
+For installation instructions, see the [Getting Started Guide](https://platform-mesh.io/main/getting-started).
 
 To fetch the component using OCM CLI:
 
