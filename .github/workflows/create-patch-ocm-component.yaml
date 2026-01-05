@@ -5,10 +5,12 @@ on:
     inputs:
       base_version:
         description: 'Base version to copy components from (e.g., 0.1.0)'
+        default: 0.1.0
         required: true
         type: string
       target_version:
         description: 'Target version to publish (e.g., 0.1.1, 0.1.1-rc.1, 0.1.1-build.1)'
+        default: 0.1.1-rc.1
         required: true
         type: string
       component_overrides:
@@ -18,7 +20,7 @@ on:
       dry_run:
         description: 'Dry run mode - create component archive but do not transfer to registry'
         required: false
-        default: false
+        default: true
         type: boolean
 
 permissions:
@@ -289,7 +291,7 @@ jobs:
           TARGET_VERSION="${{ inputs.target_version }}"
 
           echo ""
-          echo "=== DRY RUN MODE ===""
+          echo "=== DRY RUN MODE ==="
           echo ""
           echo "✓ Component created successfully in local CTF"
           echo "✗ Transfer to registry SKIPPED (dry-run mode)"
