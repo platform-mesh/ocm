@@ -5,12 +5,10 @@ on:
     inputs:
       base_version:
         description: 'Base version to copy components from (e.g., 0.1.0)'
-        default: 0.1.0
         required: true
         type: string
       target_version:
         description: 'Target version to publish (e.g., 0.1.1, 0.1.1-rc.1, 0.1.1-build.1)'
-        default: 0.1.1-rc.1
         required: true
         type: string
       component_overrides:
