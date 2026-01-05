@@ -169,13 +169,16 @@ jobs:
           echo ""
           echo "Converting descriptor to OCM component list format..."
           # Transform from descriptor format to component list format
-          # From: {component: {..., provider: "string"}, meta: {...}}
+          # From: {component: {..., provider: "string", repositoryContexts: [...], creationTime: "..."}, meta: {...}}
           # To: {components: [{..., provider: {name: "string"}}]}
 
-          # Step 1: Extract component and wrap in array
-          yq eval '{"components": [.component]}' patch-component.yaml > patch-component-list.yaml
+          # Step 1: Remove runtime metadata fields that are not allowed in component specs
+          yq eval 'del(.component.repositoryContexts) | del(.component.creationTime)' patch-component.yaml > patch-component-clean.yaml
 
-          # Step 2: Transform provider from string to object
+          # Step 2: Extract component and wrap in array
+          yq eval '{"components": [.component]}' patch-component-clean.yaml > patch-component-list.yaml
+
+          # Step 3: Transform provider from string to object
           yq eval '.components[].provider |= {"name": .}' -i patch-component-list.yaml
 
           echo "✓ Generated patch component descriptor"
