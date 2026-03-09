@@ -6,3 +6,4 @@
 # Generated release files (created by hack/ scripts)
 generated/
 dist/
+.vscode/settings.json
