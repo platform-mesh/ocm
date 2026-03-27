@@ -33,42 +33,69 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: Setup environment
+        env:
+          INPUT_PREFIX: ${{ inputs.prefix }}
+          INPUT_RANGE_START: ${{ inputs.range_start }}
+          INPUT_RANGE_END: ${{ inputs.range_end }}
+          INPUT_DRY_RUN: ${{ inputs.dry_run }}
         run: |
           echo "=== Cleanup Package Versions Workflow ===" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Configuration:**" >> $GITHUB_STEP_SUMMARY
-          echo "- Prefix: \`${{ inputs.prefix }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- Range: ${{ inputs.range_start }} - ${{ inputs.range_end }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Dry Run: ${{ inputs.dry_run }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Prefix: \`${INPUT_PREFIX}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Range: ${INPUT_RANGE_START} - ${INPUT_RANGE_END}" >> $GITHUB_STEP_SUMMARY
+          echo "- Dry Run: ${INPUT_DRY_RUN}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
+
+      - name: Validate inputs
+        env:
+          INPUT_RANGE_START: ${{ inputs.range_start }}
+          INPUT_RANGE_END: ${{ inputs.range_end }}
+        run: |
+          if ! [[ "${INPUT_RANGE_START}" =~ ^[0-9]+$ ]]; then
+            echo "Error: range_start must be a non-negative integer" >&2
+            exit 1
+          fi
+          if ! [[ "${INPUT_RANGE_END}" =~ ^[0-9]+$ ]]; then
+            echo "Error: range_end must be a non-negative integer" >&2
+            exit 1
+          fi
 
       - name: Run cleanup script (dry-run)
         if: inputs.dry_run == true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_PREFIX: ${{ inputs.prefix }}
+          INPUT_RANGE_START: ${{ inputs.range_start }}
+          INPUT_RANGE_END: ${{ inputs.range_end }}
         run: |
           ./.github/scripts/cleanup-versions.sh \
-            --prefix "${{ inputs.prefix }}" \
-            --range-start ${{ inputs.range_start }} \
-            --range-end ${{ inputs.range_end }} \
+            --prefix "${INPUT_PREFIX}" \
+            --range-start "${INPUT_RANGE_START}" \
+            --range-end "${INPUT_RANGE_END}" \
             --dry-run
 
       - name: Run cleanup script (delete)
         if: inputs.dry_run == false
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_PREFIX: ${{ inputs.prefix }}
+          INPUT_RANGE_START: ${{ inputs.range_start }}
+          INPUT_RANGE_END: ${{ inputs.range_end }}
         run: |
           ./.github/scripts/cleanup-versions.sh \
-            --prefix "${{ inputs.prefix }}" \
-            --range-start ${{ inputs.range_start }} \
-            --range-end ${{ inputs.range_end }} \
+            --prefix "${INPUT_PREFIX}" \
+            --range-start "${INPUT_RANGE_START}" \
+            --range-end "${INPUT_RANGE_END}" \
             --force
 
       - name: Summary
         if: always()
+        env:
+          INPUT_DRY_RUN: ${{ inputs.dry_run }}
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY
-          if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+          if [[ "${INPUT_DRY_RUN}" == "true" ]]; then
             echo "**Status:** Preview completed (dry-run mode)" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "ℹ️ No versions were deleted. To perform actual deletion, run this workflow again with 'Preview only' set to false." >> $GITHUB_STEP_SUMMARY
