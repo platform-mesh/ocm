@@ -1,9 +1,9 @@
-name: Build Root OCM Component
+name: Build Service OCM Component
 on:
   workflow_dispatch:
     inputs:
       componentName:
-        description: 'Root component name (e.g., github.com/platform-mesh/security-operator)'
+        description: 'Service component name (e.g., github.com/platform-mesh/security-operator)'
         required: true
         type: string
       chartName:
@@ -28,7 +28,7 @@ permissions:
   contents: read
 
 jobs:
-  root-component:
+  service-component:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -77,9 +77,9 @@ jobs:
           fi
           echo "IMAGE_COMPONENT_NAME=$IMAGE_COMPONENT_NAME" >> $GITHUB_ENV
 
-      - name: Write root component constructor
+      - name: Write service component constructor
         run: |
-          cat <<'EOF' > root-component-constructor.yaml
+          cat <<'EOF' > service-component-constructor.yaml
           components:
             - name: "{{ .COMPONENT_NAME }}"
               version: "{{ .VERSION }}"
@@ -97,7 +97,7 @@ jobs:
       - name: Create OCM ComponentArchive
         run: |
           ocm_ctf=transport.ctf
-          ./ocm add components -c --templater=go --file "$ocm_ctf" root-component-constructor.yaml -- \
+          ./ocm add components -c --templater=go --file "$ocm_ctf" service-component-constructor.yaml -- \
             COMPONENT_NAME=${{ inputs.componentName }} \
             VERSION=${{ inputs.chartVersion }} \
             CHART_NAME=${{ inputs.chartName }} \
