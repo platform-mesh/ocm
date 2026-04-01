@@ -9,3 +9,4 @@
 generated/
 dist/
 .vscode/settings.json
+signing.pub
