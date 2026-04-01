@@ -2,6 +2,8 @@
 .claude
 !.claude/commands
 .ocm
+.secrets/
+.DS_Store
 
 # Generated release files (created by hack/ scripts)
 generated/
