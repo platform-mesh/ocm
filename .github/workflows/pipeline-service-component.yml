@@ -34,6 +34,14 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
+      - name: Create Github App Token
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3
+        id: app-token
+        with:
+          app-id: "1415820"
+          private-key: ${{ secrets.PM_PUBLISHER_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
       - name: Setup OCM CLI
         run: |
           REPO=${repo:=open-component-model/ocm}
@@ -65,7 +73,7 @@ jobs:
                     - type: Credentials
                       properties:
                         username: github
-                        password: ${{ secrets.GITHUB_TOKEN }}
+                        password: ${{ steps.app-token.outputs.token }}
           EOF
 
       - name: Determine image component name
@@ -120,4 +128,4 @@ jobs:
         run: |
           gh workflow run ocm.yaml --repo "platform-mesh/ocm"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
