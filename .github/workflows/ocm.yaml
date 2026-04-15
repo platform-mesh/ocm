@@ -462,7 +462,7 @@ jobs:
         run: |
           ocm_ctf=.ocm/transport.ctf
           mkdir -p "$(dirname "$ocm_ctf")"
-          ./ocm transfer componentversions --recursive \
+          ./ocm transfer componentversions --copy-resources --recursive \
             "europe-docker.pkg.dev/gardener-project/releases//github.com/gardener/etcd-druid:${{ env.GARDENER_ETCD_DRUID_VERSION }}" \
             "$ocm_ctf"
 
