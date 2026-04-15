@@ -511,7 +511,7 @@ jobs:
         if: steps.version_check.outputs.needs_update == 'true'
         run: |
           ./ocm hash components --lookup ghcr.io/platform-mesh .ocm/transport.ctf
-          ./ocm transfer ctf --overwrite .ocm/transport.ctf "ghcr.io/platform-mesh"
+          ./ocm transfer ctf .ocm/transport.ctf "ghcr.io/platform-mesh"
 
       - name: Sign OCM Component
         if: steps.version_check.outputs.needs_update == 'true'
