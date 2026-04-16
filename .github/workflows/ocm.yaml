@@ -304,7 +304,6 @@ jobs:
             CURRENT_GATEWAY_API=$(yq eval '.component.componentReferences[] | select(.name == "gateway-api") | .version' current_pm_component.yaml 2>/dev/null || echo "")
             CURRENT_TRAEFIK=$(yq eval '.component.componentReferences[] | select(.name == "traefik") | .version' current_pm_component.yaml 2>/dev/null || echo "")
             CURRENT_CERT_MANAGER=$(yq eval '.component.componentReferences[] | select(.name == "cert-manager") | .version' current_pm_component.yaml 2>/dev/null || echo "")
-            CURRENT_KCP_OPERATOR=$(yq eval '.component.componentReferences[] | select(.name == "kcp-operator") | .version' current_pm_component.yaml 2>/dev/null || echo "")
           else
             # No existing component, so we need to create one
             echo "No existing platform-mesh component found, creating initial version"
@@ -452,12 +451,6 @@ jobs:
             NEEDS_UPDATE=true
           fi
 
-          if [ "$CURRENT_KCP_OPERATOR" != "${{ env.KCP_OPERATOR_COMPONENT_VERSION }}" ]; then
-            echo "Kcp Operator: $CURRENT_KCP_OPERATOR -> ${{ env.KCP_OPERATOR_COMPONENT_VERSION }}"
-            NEEDS_UPDATE=true
-          fi
-
-
           if [ "$NEEDS_UPDATE" = "true" ]; then
             echo "Component dependencies have changed, creating new version"
             echo "Previous platform-mesh version: ${{ env.CURRENT_PM_VERSION }}"
@@ -518,7 +511,13 @@ jobs:
             IAM_SERVICE_VERSION=${{ env.IAM_SERVICE_VERSION }} \
             IAM_UI_VERSION=${{ env.IAM_UI_VERSION }} \
             MARKETPLACE_UI_VERSION=${{ env.MARKETPLACE_UI_VERSION }} \
-            TERMINAL_CONTROLLER_MANAGER_VERSION=${{ env.TERMINAL_CONTROLLER_MANAGER_VERSION }}
+            TERMINAL_CONTROLLER_MANAGER_VERSION=${{ env.TERMINAL_CONTROLLER_MANAGER_VERSION }} \
+            GATEWAY_API_COMPONENT_VERSION=${{ env.GATEWAY_API_COMPONENT_VERSION }} \
+            TRAEFIK_COMPONENT_VERSION=${{ env.TRAEFIK_COMPONENT_VERSION }} \
+            CERT_MANAGER_COMPONENT_VERSION=${{ env.CERT_MANAGER_COMPONENT_VERSION }} \
+            OPENFGA_COMPONENT_VERSION=${{ env.OPENFGA_COMPONENT_VERSION }} \
+            KCP_OPERATOR_COMPONENT_VERSION=${{ env.KCP_OPERATOR_COMPONENT_VERSION }} \
+            INIT_AGENT_COMPONENT_VERSION=${{ env.INIT_AGENT_COMPONENT_VERSION }}
 
       - name: Transfer to OCM REPO
         if: steps.version_check.outputs.needs_update == 'true'

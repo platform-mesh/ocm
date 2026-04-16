@@ -171,13 +171,13 @@ components:
         version: {{ .PM_KEYCLOAK_VERSION }}
       - name: kcp-operator
         componentName: github.com/kcp-dev/kcp-operator
-        version: {{ .KCP_OPERATOR_CHART_VERSION }}
+        version: {{ .KCP_OPERATOR_COMPONENT_VERSION }}
       - name: kcp
         componentName: github.com/kcp-dev/kcp
         version: {{ .KCP_VERSION }}
       - name: init-agent
         componentName: github.com/kcp-dev/init-agent
-        version: {{ .INIT_AGENT_CHART_VERSION }}
+        version: {{ .INIT_AGENT_COMPONENT_VERSION }}
       - name: kubernetes-graphql-gateway
         componentName: github.com/platform-mesh/kubernetes-graphql-gateway
         version: {{ .KUBERNETES_GRAPHQL_GATEWAY_VERSION }}
@@ -189,7 +189,7 @@ components:
         version: {{ .SECURITY_OPERATOR_VERSION }}
       - name: openfga
         componentName: github.com/openfga/openfga
-        version: {{ .PM_OPENFGA_VERSION }}
+        version: {{ .OPENFGA_COMPONENT_VERSION }}
       - name: platform-mesh-operator
         componentName: github.com/platform-mesh/platform-mesh-operator
         version: {{ .PLATFORM_MESH_OPERATOR_VERSION }}
@@ -216,13 +216,13 @@ components:
         version: {{ .MARKETPLACE_UI_VERSION }}
       - name: gateway-api
         componentName: github.com/kubernetes-sigs/gateway-api
-        version: {{ .GATEWAY_API_VERSION }}
+        version: {{ .GATEWAY_API_COMPONENT_VERSION }}
       - name: traefik
         componentName: github.com/traefik/traefik
-        version: {{ .TRAEFIK_VERSION }}
+        version: {{ .TRAEFIK_COMPONENT_VERSION }}
       - name: terminal-controller-manager
         componentName: github.com/platform-mesh/terminal-controller-manager
         version: {{ .TERMINAL_CONTROLLER_MANAGER_VERSION }}
       - name: cert-manager
         componentName: github.com/cert-manager/cert-manager
-        version: {{ .CERT_MANAGER_VERSION }}
+        version: {{ .CERT_MANAGER_COMPONENT_VERSION }}
