@@ -523,19 +523,19 @@ jobs:
         if: steps.version_check.outputs.needs_update == 'true'
         run: |
           ./ocm get cv ctf::.ocm/transport.ctf//github.com/kcp-dev/init-agent -ojson --recursive
-          # ./ocm transfer cv -f ctf::.ocm/transport.ctf//github.com/kcp-dev/init-agent:${{ env.INIT_AGENT_CHART_VERSION }} "OCIRegistry::ghcr.io/platform-mesh" --enforce --recursive
+          ./ocm transfer cv -f ctf::.ocm/transport.ctf//github.com/kcp-dev/init-agent:${{ env.INIT_AGENT_CHART_VERSION }} "OCIRegistry::ghcr.io/platform-mesh" --enforce --recursive
 
       - name: Fix kcp-operator
         if: steps.version_check.outputs.needs_update == 'true'
         run: |
           ./ocm get cv ctf::.ocm/transport.ctf//github.com/kcp-dev/kcp-operator -ojson --recursive
-          # ./ocm transfer cv -f ctf::.ocm/transport.ctf//github.com/kcp-dev/kcp-operator:${{ env.KCP_OPERATOR_CHART_VERSION }} "OCIRegistry::ghcr.io/platform-mesh" --enforce --recursive
+          ./ocm transfer cv -f ctf::.ocm/transport.ctf//github.com/kcp-dev/kcp-operator:${{ env.KCP_OPERATOR_CHART_VERSION }} "OCIRegistry::ghcr.io/platform-mesh" --enforce --recursive
 
       - name: Fix openfga
         if: steps.version_check.outputs.needs_update == 'true'
         run: |
           ./ocm get cv ctf::.ocm/transport.ctf//github.com/openfga/openfga -ojson --recursive
-          # ./ocm transfer cv -f ctf::.ocm/transport.ctf//github.com/openfga/openfga:${{ env.OPENFGA_VERSION }} "OCIRegistry::ghcr.io/platform-mesh" --enforce --recursive
+          ./ocm transfer cv -f ctf::.ocm/transport.ctf//github.com/openfga/openfga:${{ env.OPENFGA_VERSION }} "OCIRegistry::ghcr.io/platform-mesh" --enforce --recursive
 
       # - name: Transfer to OCM REPO
       #   if: steps.version_check.outputs.needs_update == 'true'
