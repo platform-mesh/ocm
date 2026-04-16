@@ -517,7 +517,7 @@ jobs:
       - name: Fix traefik
         if: steps.version_check.outputs.needs_update == 'true'
         run: |
-          ./ocm get cv ctf::.ocm/transport.ctf//github.com/traefik/traefik:39.0.7 -ojson --recursive
+          ./ocm get cv ctf::.ocm/transport.ctf//github.com/traefik/traefik -ojson --recursive
           # ./ocm transfer cv -f ctf::.ocm/transport.ctf//github.com/traefik/traefik:39.0.7 "OCIRegistry::ghcr.io/platform-mesh" --enforce --recursive
 
       # - name: Transfer to OCM REPO
