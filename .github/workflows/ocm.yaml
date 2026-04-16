@@ -512,9 +512,8 @@ jobs:
         run: |
           ./ocm get cv ctf::.ocm/transport.ctf//github.com/kubernetes-sigs/gateway-api:v1.4.1 -ojson --recursive
           ./ocm transfer cv \
-            ctf::.ocm/transport.ctf \
+            ctf::.ocm/transport.ctf//github.com/kubernetes-sigs/gateway-api:v1.4.1 \
             oci::ghcr.io/platform-mesh \
-            github.com/kubernetes-sigs/gateway-api:v1.4.1 \
             --recursive
 
       # - name: Transfer to OCM REPO
