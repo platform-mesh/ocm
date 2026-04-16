@@ -71,6 +71,7 @@ jobs:
       OPENFGA_IMAGE_VERSION: "v1.11.5"
       OPENFGA_POSTGRESQL_IMAGE_VERSION: "17.6.0-debian-12-r4"
       GATEWAY_API_VERSION: "v1.4.1"
+      GATEWAY_API_COMPONENT_VERSION: "1.0.0"
       GATEWAY_API_COMMIT: "477d172e6ac5eccb82b65781ddb8f924afec4170"
       TRAEFIK_VERSION: "39.0.7"
       TRAEFIK_IMAGE_VERSION: "v3.6.12"
@@ -430,8 +431,8 @@ jobs:
             NEEDS_UPDATE=true
           fi
 
-          if [ "$CURRENT_GATEWAY_API" != "${{ env.GATEWAY_API_VERSION }}" ]; then
-            echo "Gateway API: $CURRENT_GATEWAY_API -> ${{ env.GATEWAY_API_VERSION }}"
+          if [ "$CURRENT_GATEWAY_API" != "${{ env.GATEWAY_API_COMPONENT_VERSION }}" ]; then
+            echo "Gateway API: $CURRENT_GATEWAY_API -> ${{ env.GATEWAY_API_COMPONENT_VERSION }}"
             NEEDS_UPDATE=true
           fi
 
@@ -491,6 +492,7 @@ jobs:
             OPENFGA_POSTGRESQL_IMAGE_VERSION=${{ env.OPENFGA_POSTGRESQL_IMAGE_VERSION }} \
             PM_OPENFGA_VERSION=${{ env.PM_OPENFGA_VERSION }} \
             GATEWAY_API_VERSION=${{ env.GATEWAY_API_VERSION }} \
+            GATEWAY_API_COMPONENT_VERSION=${{ env.GATEWAY_API_COMPONENT_VERSION }} \
             GATEWAY_API_COMMIT=${{ env.GATEWAY_API_COMMIT }} \
             TRAEFIK_VERSION=${{ env.TRAEFIK_VERSION }} \
             TRAEFIK_IMAGE_VERSION=${{ env.TRAEFIK_IMAGE_VERSION }} \
