@@ -507,19 +507,23 @@ jobs:
             MARKETPLACE_UI_VERSION=${{ env.MARKETPLACE_UI_VERSION }} \
             TERMINAL_CONTROLLER_MANAGER_VERSION=${{ env.TERMINAL_CONTROLLER_MANAGER_VERSION }}
 
-      - name: Transfer to OCM REPO
+      - name: Fix gateway-api
         if: steps.version_check.outputs.needs_update == 'true'
         run: |
-          ./ocm hash components --lookup ghcr.io/platform-mesh .ocm/transport.ctf
-          ./ocm transfer ctf --lookup ghcr.io/platform-mesh .ocm/transport.ctf "ghcr.io/platform-mesh"
+          ./ocm get cv directory::.ocm/transport.ctf//github.com/kubernetes-sigs/gateway-api:v1.4.1 -ojson --recursive
+      # - name: Transfer to OCM REPO
+      #   if: steps.version_check.outputs.needs_update == 'true'
+      #   run: |
+      #     ./ocm hash components --lookup ghcr.io/platform-mesh .ocm/transport.ctf
+      #     ./ocm transfer ctf --lookup ghcr.io/platform-mesh .ocm/transport.ctf "ghcr.io/platform-mesh"
 
-      - name: Sign OCM Component
-        if: steps.version_check.outputs.needs_update == 'true'
-        run: |
-          printf '%s' "$OCM_SIGNING_PRIVATE_KEY" > /tmp/ocm-signing.priv
-          ./ocm sign componentversions --signature platform-mesh --private-key /tmp/ocm-signing.priv \
-            "oci://ghcr.io/platform-mesh//github.com/platform-mesh/platform-mesh:${{ env.VERSION }}"
-          rm -f /tmp/ocm-signing.priv
-        env:
-          OCM_SIGNING_PRIVATE_KEY: ${{ secrets.OCM_SIGNING_PRIVATE_KEY }}
+      # - name: Sign OCM Component
+      #   if: steps.version_check.outputs.needs_update == 'true'
+      #   run: |
+      #     printf '%s' "$OCM_SIGNING_PRIVATE_KEY" > /tmp/ocm-signing.priv
+      #     ./ocm sign componentversions --signature platform-mesh --private-key /tmp/ocm-signing.priv \
+      #       "oci://ghcr.io/platform-mesh//github.com/platform-mesh/platform-mesh:${{ env.VERSION }}"
+      #     rm -f /tmp/ocm-signing.priv
+      #   env:
+      #     OCM_SIGNING_PRIVATE_KEY: ${{ secrets.OCM_SIGNING_PRIVATE_KEY }}
 
