@@ -511,7 +511,11 @@ jobs:
         if: steps.version_check.outputs.needs_update == 'true'
         run: |
           ./ocm get cv ctf::.ocm/transport.ctf//github.com/kubernetes-sigs/gateway-api:v1.4.1 -ojson --recursive
-          ./ocm transfer componentversions ctf::.ocm/transport.ctf//github.com/kubernetes-sigs/gateway-api:v1.4.1 --repo ghcr.io/platform-mesh
+          ./ocm transfer cv \
+            ctf::.ocm/transport.ctf \
+            oci::ghcr.io/platform-mesh \
+            github.com/kubernetes-sigs/gateway-api:v1.4.1 \
+            --recursive
 
       # - name: Transfer to OCM REPO
       #   if: steps.version_check.outputs.needs_update == 'true'
