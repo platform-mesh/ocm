@@ -457,14 +457,14 @@ jobs:
             echo "needs_update=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Copy external component references to local CTF
-        if: steps.version_check.outputs.needs_update == 'true'
-        run: |
-          ocm_ctf=.ocm/transport.ctf
-          mkdir -p "$(dirname "$ocm_ctf")"
-          ./ocm transfer componentversions --copy-resources --recursive \
-            "europe-docker.pkg.dev/gardener-project/releases//github.com/gardener/etcd-druid:${{ env.GARDENER_ETCD_DRUID_VERSION }}" \
-            "$ocm_ctf"
+      # - name: Copy external component references to local CTF
+      #   if: steps.version_check.outputs.needs_update == 'true'
+      #   run: |
+      #     ocm_ctf=.ocm/transport.ctf
+      #     mkdir -p "$(dirname "$ocm_ctf")"
+      #     ./ocm transfer componentversions --copy-resources --recursive \
+      #       "europe-docker.pkg.dev/gardener-project/releases//github.com/gardener/etcd-druid:${{ env.GARDENER_ETCD_DRUID_VERSION }}" \
+      #       "$ocm_ctf"
 
       - name: create OCM ComponentArchive
         if: steps.version_check.outputs.needs_update == 'true'
@@ -511,6 +511,7 @@ jobs:
         if: steps.version_check.outputs.needs_update == 'true'
         run: |
           ./ocm get cv ctf::.ocm/transport.ctf//github.com/kubernetes-sigs/gateway-api:v1.4.1 -ojson --recursive
+          ./ocm transfer ctf --lookup ghcr.io/platform-mesh .ocm/transport.ctf//github.com/kubernetes-sigs/gateway-api:v1.4.1 "ghcr.io/platform-mesh"
 
       # - name: Transfer to OCM REPO
       #   if: steps.version_check.outputs.needs_update == 'true'
