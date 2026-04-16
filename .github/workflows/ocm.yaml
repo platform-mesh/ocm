@@ -510,7 +510,8 @@ jobs:
       - name: Fix gateway-api
         if: steps.version_check.outputs.needs_update == 'true'
         run: |
-          ./ocm get cv directory::.ocm/transport.ctf//github.com/kubernetes-sigs/gateway-api:v1.4.1 -ojson --recursive
+          ./ocm get cv ctf::.ocm/transport.ctf//github.com/kubernetes-sigs/gateway-api:v1.4.1 -ojson --recursive
+
       # - name: Transfer to OCM REPO
       #   if: steps.version_check.outputs.needs_update == 'true'
       #   run: |
