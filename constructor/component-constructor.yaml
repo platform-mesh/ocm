@@ -1,6 +1,6 @@
 components:
   - name: github.com/kubernetes-sigs/gateway-api
-    version: {{ .GATEWAY_API_COMPONENT_VERSION }}
+    version: {{ .GATEWAY_API_VERSION }}
     provider:
       name: gateway-api
     resources:
