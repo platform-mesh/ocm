@@ -411,8 +411,8 @@ jobs:
           fi
 
           # Check third-party dependency versions
-          if [ "$CURRENT_KCP_OPERATOR" != "${{ env.KCP_OPERATOR_CHART_VERSION }}" ]; then
-            echo "KCP Operator: $CURRENT_KCP_OPERATOR -> ${{ env.KCP_OPERATOR_CHART_VERSION }}"
+          if [ "$CURRENT_KCP_OPERATOR" != "${{ env.KCP_OPERATOR_COMPONENT_VERSION }}" ]; then
+            echo "KCP Operator: $CURRENT_KCP_OPERATOR -> ${{ env.KCP_OPERATOR_COMPONENT_VERSION }}"
             NEEDS_UPDATE=true
           fi
 
