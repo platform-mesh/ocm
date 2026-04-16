@@ -1,6 +1,6 @@
 components:
   - name: github.com/kubernetes-sigs/gateway-api
-    version: {{ .GATEWAY_API_VERSION }}
+    version: {{ .GATEWAY_API_COMPONENT_VERSION }}
     provider:
       name: gateway-api
     resources:
@@ -13,7 +13,7 @@ components:
           ref: {{ .GATEWAY_API_VERSION }}
           commit: {{ .GATEWAY_API_COMMIT }}
   - name: github.com/traefik/traefik
-    version: {{ .TRAEFIK_VERSION }}
+    version: {{ .TRAEFIK_COMPONENT_VERSION }}
     provider:
       name: traefik
     resources:
@@ -39,7 +39,7 @@ components:
           type: ociArtifact
           imageReference: "docker.io/library/traefik:{{ .TRAEFIK_IMAGE_VERSION }}"
   - name: github.com/cert-manager/cert-manager
-    version: {{ .CERT_MANAGER_VERSION }}
+    version: {{ .CERT_MANAGER_COMPONENT_VERSION }}
     provider:
       name: cert-manager
     resources:
@@ -71,7 +71,7 @@ components:
           type: ociArtifact
           imageReference: "quay.io/jetstack/cert-manager-cainjector:{{ .CERT_MANAGER_VERSION }}"
   - name: github.com/openfga/openfga
-    version: {{ .OPENFGA_VERSION }}
+    version: {{ .OPENFGA_COMPONENT_VERSION }}
     provider:
       name: openfga
     resources:
@@ -97,7 +97,7 @@ components:
           type: ociArtifact
           imageReference: "ghcr.io/platform-mesh/upstream-images/postgresql:{{ .OPENFGA_POSTGRESQL_IMAGE_VERSION }}"
   - name: github.com/kcp-dev/kcp-operator
-    version: {{ .KCP_OPERATOR_CHART_VERSION }}
+    version: {{ .KCP_OPERATOR_COMPONENT_VERSION }}
     provider:
       name: kcp
     resources:
@@ -128,7 +128,7 @@ components:
           type: ociArtifact
           imageReference: "ghcr.io/kcp-dev/kcp:{{ .KCP_VERSION }}"
   - name: github.com/kcp-dev/init-agent
-    version: {{ .INIT_AGENT_CHART_VERSION }}
+    version: {{ .INIT_AGENT_COMPONENT_VERSION }}
     provider:
       name: kcp
     resources:
