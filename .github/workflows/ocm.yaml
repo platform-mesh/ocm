@@ -462,9 +462,9 @@ jobs:
         run: |
           ocm_ctf=.ocm/transport.ctf
           mkdir -p "$(dirname "$ocm_ctf")"
-          ./ocm transfer componentversions --copy-resources --recursive \
-            "europe-docker.pkg.dev/gardener-project/releases//github.com/gardener/etcd-druid:${{ env.GARDENER_ETCD_DRUID_VERSION }}" \
-            "$ocm_ctf"
+          # ./ocm transfer componentversions --copy-resources --recursive \
+          #   "europe-docker.pkg.dev/gardener-project/releases//github.com/gardener/etcd-druid:${{ env.GARDENER_ETCD_DRUID_VERSION }}" \
+          #   "$ocm_ctf"
 
       - name: create OCM ComponentArchive
         if: steps.version_check.outputs.needs_update == 'true'
@@ -507,19 +507,49 @@ jobs:
             MARKETPLACE_UI_VERSION=${{ env.MARKETPLACE_UI_VERSION }} \
             TERMINAL_CONTROLLER_MANAGER_VERSION=${{ env.TERMINAL_CONTROLLER_MANAGER_VERSION }}
 
-      - name: Transfer to OCM REPO
+      - name: Fix gateway-api
         if: steps.version_check.outputs.needs_update == 'true'
         run: |
-          ./ocm hash components --lookup ghcr.io/platform-mesh .ocm/transport.ctf
-          ./ocm transfer ctf --lookup ghcr.io/platform-mesh .ocm/transport.ctf "ghcr.io/platform-mesh"
+          ./ocm get cv ctf::.ocm/transport.ctf//github.com/kubernetes-sigs/gateway-api:v1.4.1 -ojson --recursive
+          ./ocm transfer cv -f ctf::.ocm/transport.ctf//github.com/kubernetes-sigs/gateway-api:v1.4.1 "OCIRegistry::ghcr.io/platform-mesh" --enforce --recursive
 
-      - name: Sign OCM Component
+      - name: Fix traefik
         if: steps.version_check.outputs.needs_update == 'true'
         run: |
-          printf '%s' "$OCM_SIGNING_PRIVATE_KEY" > /tmp/ocm-signing.priv
-          ./ocm sign componentversions --signature platform-mesh --private-key /tmp/ocm-signing.priv \
-            "oci://ghcr.io/platform-mesh//github.com/platform-mesh/platform-mesh:${{ env.VERSION }}"
-          rm -f /tmp/ocm-signing.priv
-        env:
-          OCM_SIGNING_PRIVATE_KEY: ${{ secrets.OCM_SIGNING_PRIVATE_KEY }}
+          ./ocm get cv ctf::.ocm/transport.ctf//github.com/traefik/traefik -ojson --recursive
+          ./ocm transfer cv -f ctf::.ocm/transport.ctf//github.com/traefik/traefik:39.0.7 "OCIRegistry::ghcr.io/platform-mesh" --enforce --recursive
+
+      - name: Fix init-agent
+        if: steps.version_check.outputs.needs_update == 'true'
+        run: |
+          ./ocm get cv ctf::.ocm/transport.ctf//github.com/kcp-dev/init-agent -ojson --recursive
+          ./ocm transfer cv -f ctf::.ocm/transport.ctf//github.com/kcp-dev/init-agent:${{ env.INIT_AGENT_CHART_VERSION }} "OCIRegistry::ghcr.io/platform-mesh" --enforce --recursive
+
+      - name: Fix kcp-operator
+        if: steps.version_check.outputs.needs_update == 'true'
+        run: |
+          ./ocm get cv ctf::.ocm/transport.ctf//github.com/kcp-dev/kcp-operator -ojson --recursive
+          ./ocm transfer cv -f ctf::.ocm/transport.ctf//github.com/kcp-dev/kcp-operator:${{ env.KCP_OPERATOR_CHART_VERSION }} "OCIRegistry::ghcr.io/platform-mesh" --enforce --recursive
+
+      - name: Fix openfga
+        if: steps.version_check.outputs.needs_update == 'true'
+        run: |
+          ./ocm get cv ctf::.ocm/transport.ctf//github.com/openfga/openfga -ojson --recursive
+          ./ocm transfer cv -f ctf::.ocm/transport.ctf//github.com/openfga/openfga:${{ env.OPENFGA_VERSION }} "OCIRegistry::ghcr.io/platform-mesh" --enforce --recursive
+
+      # - name: Transfer to OCM REPO
+      #   if: steps.version_check.outputs.needs_update == 'true'
+      #   run: |
+      #     ./ocm hash components --lookup ghcr.io/platform-mesh .ocm/transport.ctf
+      #     ./ocm transfer ctf --lookup ghcr.io/platform-mesh .ocm/transport.ctf "ghcr.io/platform-mesh"
+
+      # - name: Sign OCM Component
+      #   if: steps.version_check.outputs.needs_update == 'true'
+      #   run: |
+      #     printf '%s' "$OCM_SIGNING_PRIVATE_KEY" > /tmp/ocm-signing.priv
+      #     ./ocm sign componentversions --signature platform-mesh --private-key /tmp/ocm-signing.priv \
+      #       "oci://ghcr.io/platform-mesh//github.com/platform-mesh/platform-mesh:${{ env.VERSION }}"
+      #     rm -f /tmp/ocm-signing.priv
+      #   env:
+      #     OCM_SIGNING_PRIVATE_KEY: ${{ secrets.OCM_SIGNING_PRIVATE_KEY }}
 
