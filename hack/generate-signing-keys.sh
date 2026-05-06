@@ -43,7 +43,7 @@ COMPONENTS=(
 
 generate_component_cert() {
   local name="$1"
-  local cn="${name}.${CA_CN}"
+  local cn="${CA_CN}"
 
   echo "==> Generating certificate for ${name} (CN=${cn})"
 
