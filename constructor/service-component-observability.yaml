@@ -1,0 +1,15 @@
+components:
+  - name: "{{ .COMPONENT_NAME }}"
+    version: "{{ .VERSION }}"
+    provider:
+      name: Platform Mesh Team
+    componentReferences:
+      - name: chart
+        componentName: "github.com/platform-mesh/helm-charts/{{ .CHART_NAME }}"
+        version: "{{ .VERSION }}"
+      - name: opentelemetry-operator
+        componentName: github.com/open-telemetry/opentelemetry-operator
+        version: "0.110.0"
+      - name: prometheus
+        componentName: github.com/prometheus-community/prometheus
+        version: "27.0.0"
