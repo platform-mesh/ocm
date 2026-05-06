@@ -1,23 +1,4 @@
 components:
-  - name: github.com/platform-mesh/keycloak-operator
-    version: {{ .KEYCLOAK_OPERATOR_VERSION }}
-    provider:
-      name: keycloak-operator
-    resources:
-      - name: chart
-        type: helmChart
-        version: {{ .KEYCLOAK_OPERATOR_VERSION }}
-        access:
-          type: helm
-          helmChart: keycloak-operator:{{ .KEYCLOAK_OPERATOR_VERSION }}
-          helmRepository: https://platform-mesh.github.io/helm-charts
-      - name: image
-        type: ociImage
-        relation: external
-        version: {{ .KEYCLOAK_OPERATOR_IMAGE_VERSION }}
-        access:
-          type: ociArtifact
-          imageReference: "ghcr.io/platform-mesh/custom-images/keycloak-operator:{{ .KEYCLOAK_OPERATOR_IMAGE_VERSION }}"
   - name: github.com/kubernetes-sigs/gateway-api
     version: {{ .GATEWAY_API_VERSION }}
     provider:
@@ -185,9 +166,9 @@ components:
       - name: infra
         componentName: github.com/platform-mesh/infra
         version: {{ .INFRA_VERSION }}
-      - name: keycloak-operator
-        componentName: github.com/platform-mesh/keycloak-operator
-        version: {{ .KEYCLOAK_OPERATOR_VERSION }}
+      - name: keycloak
+        componentName: github.com/platform-mesh/keycloak
+        version: {{ .PM_KEYCLOAK_VERSION }}
       - name: kcp-operator
         componentName: github.com/kcp-dev/kcp-operator
         version: {{ .KCP_OPERATOR_CHART_VERSION }}

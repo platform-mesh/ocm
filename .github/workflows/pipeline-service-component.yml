@@ -103,6 +103,7 @@ jobs:
           --public-key /tmp/ocm-signing.cert \
             "oci://ghcr.io/platform-mesh//${{ inputs.componentName }}:${{ inputs.chartVersion }}"
           rm -f /tmp/ocm-signing.priv
+          rm -f /tmp/ocm-signing.cert
         env:
           OCM_SIGNING_PRIVATE_KEY: ${{ secrets.OCM_SIGNING_PRIVATE_KEY }}
           OCM_SIGNING_CERT: ${{ secrets.OCM_SIGNING_CERT }}
