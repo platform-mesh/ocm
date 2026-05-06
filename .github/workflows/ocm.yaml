@@ -500,7 +500,8 @@ jobs:
             CERT_MANAGER_VERSION=${{ env.CERT_MANAGER_VERSION }} \
             KUBERNETES_GRAPHQL_GATEWAY_VERSION=${{ env.KUBERNETES_GRAPHQL_GATEWAY_VERSION }} \
             KEYCLOAK_VERSION=${{ env.KEYCLOAK_VERSION}} \
-            PM_KEYCLOAK_VERSION=${{ env.PM_KEYCLOAK_VERSION }} \
+            KEYCLOAK_OPERATOR_VERSION=${{ env.KEYCLOAK_OPERATOR_VERSION }} \
+            KEYCLOAK_OPERATOR_IMAGE_VERSION=${{ env.KEYCLOAK_OPERATOR_IMAGE_VERSION }} \
             PLATFORM_MESH_OPERATOR_COMPONENTS_VERSION=${{ env.PLATFORM_MESH_OPERATOR_COMPONENTS_VERSION }} \
             PLATFORM_MESH_OPERATOR_INFRA_COMPONENTS_VERSION=${{ env.PLATFORM_MESH_OPERATOR_INFRA_COMPONENTS_VERSION }} \
             EXAMPLE_HTTPBIN_OPERATOR_VERSION=${{ env.EXAMPLE_HTTPBIN_OPERATOR_VERSION }} \
@@ -519,9 +520,12 @@ jobs:
         if: steps.version_check.outputs.needs_update == 'true'
         run: |
           printf '%s' "$OCM_SIGNING_PRIVATE_KEY" > /tmp/ocm-signing.priv
+          printf '%s' "$OCM_SIGNING_CERT" > /tmp/ocm-signing.cert
           ./ocm sign componentversions --signature platform-mesh --private-key /tmp/ocm-signing.priv \
+          --public-key /tmp/ocm-signing.cert \
             "oci://ghcr.io/platform-mesh//github.com/platform-mesh/platform-mesh:${{ env.VERSION }}"
           rm -f /tmp/ocm-signing.priv
         env:
           OCM_SIGNING_PRIVATE_KEY: ${{ secrets.OCM_SIGNING_PRIVATE_KEY }}
+          OCM_SIGNING_CERT: ${{ secrets.OCM_SIGNING_CERT }}
 
