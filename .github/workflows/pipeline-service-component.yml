@@ -111,5 +111,5 @@ jobs:
 
   trigger-aggregator:
     needs: service-component
-    uses: platform-mesh/ocm/.github/workflows/ocm.yaml@main
+    uses: platform-mesh/ocm/.github/workflows/ocm.yaml@6e76b85c75ca72e0b3d35f946436541c20a1bc5c # main
     secrets: inherit
