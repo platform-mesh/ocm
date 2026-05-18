@@ -176,6 +176,30 @@ components:
           type: helm
           helmChart: prometheus-operator-crds:{{ .PROMETHEUS_OPERATOR_CRDS_VERSION }}
           helmRepository: https://prometheus-community.github.io/helm-charts
+  - name: github.com/prometheus-community/kube-prometheus-stack
+    version: {{ .KUBE_PROMETHEUS_STACK_VERSION }}
+    provider:
+      name: prometheus-community
+    resources:
+      - name: chart
+        type: helmChart
+        version: {{ .KUBE_PROMETHEUS_STACK_VERSION }}
+        access:
+          type: helm
+          helmChart: kube-prometheus-stack:{{ .KUBE_PROMETHEUS_STACK_VERSION }}
+          helmRepository: https://prometheus-community.github.io/helm-charts
+  - name: github.com/open-telemetry/opentelemetry-operator
+    version: {{ .OPENTELEMETRY_OPERATOR_VERSION }}
+    provider:
+      name: open-telemetry
+    resources:
+      - name: chart
+        type: helmChart
+        version: {{ .OPENTELEMETRY_OPERATOR_VERSION }}
+        access:
+          type: helm
+          helmChart: opentelemetry-operator:{{ .OPENTELEMETRY_OPERATOR_VERSION }}
+          helmRepository: https://open-telemetry.github.io/opentelemetry-helm-charts
   - name: github.com/platform-mesh/platform-mesh
     version: {{ .VERSION }}
     provider:
@@ -268,3 +292,9 @@ components:
       - name: prometheus-operator-crds
         componentName: github.com/prometheus-community/prometheus-operator-crds
         version: {{ .PROMETHEUS_OPERATOR_CRDS_VERSION }}
+      - name: kube-prometheus-stack
+        componentName: github.com/prometheus-community/kube-prometheus-stack
+        version: {{ .KUBE_PROMETHEUS_STACK_VERSION }}
+      - name: opentelemetry-operator
+        componentName: github.com/open-telemetry/opentelemetry-operator
+        version: {{ .OPENTELEMETRY_OPERATOR_VERSION }}
