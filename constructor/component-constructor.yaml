@@ -164,6 +164,18 @@ components:
         access:
           type: ociArtifact
           imageReference: "ghcr.io/cloudnative-pg/cloudnative-pg:{{ .CNPG_OPERATOR_IMAGE_VERSION }}"
+  - name: github.com/prometheus-community/prometheus-operator-crds
+    version: {{ .PROMETHEUS_OPERATOR_CRDS_VERSION }}
+    provider:
+      name: prometheus-community
+    resources:
+      - name: chart
+        type: helmChart
+        version: {{ .PROMETHEUS_OPERATOR_CRDS_VERSION }}
+        access:
+          type: helm
+          helmChart: prometheus-operator-crds:{{ .PROMETHEUS_OPERATOR_CRDS_VERSION }}
+          helmRepository: https://prometheus-community.github.io/helm-charts
   - name: github.com/platform-mesh/platform-mesh
     version: {{ .VERSION }}
     provider:
