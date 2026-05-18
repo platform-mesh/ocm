@@ -265,3 +265,6 @@ components:
       - name: cnpg-operator
         componentName: github.com/cloudnative-pg/cloudnative-pg
         version: {{ .CNPG_OPERATOR_CHART_VERSION }}
+      - name: prometheus-operator-crds
+        componentName: github.com/prometheus-community/prometheus-operator-crds
+        version: {{ .PROMETHEUS_OPERATOR_CRDS_VERSION }}
