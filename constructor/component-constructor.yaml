@@ -197,9 +197,8 @@ components:
         type: helmChart
         version: {{ .OPENTELEMETRY_OPERATOR_VERSION }}
         access:
-          type: helm
-          helmChart: opentelemetry-operator:{{ .OPENTELEMETRY_OPERATOR_VERSION }}
-          helmRepository: https://open-telemetry.github.io/opentelemetry-helm-charts
+          type: ociArtifact
+          imageReference: ghcr.io/open-telemetry/opentelemetry-helm-charts/opentelemetry-operator:{{ .OPENTELEMETRY_OPERATOR_VERSION }}
   - name: github.com/platform-mesh/platform-mesh
     version: {{ .VERSION }}
     provider:
