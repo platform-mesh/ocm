@@ -3,7 +3,7 @@
 
 # platform-mesh - ocm
 
-[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/platform-mesh/ocm/badge)](https://scorecard.dev/viewer/?uri=github.com/platform-mesh/ocm)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/platform-mesh/ocm/badge)](https://scorecard.dev/viewer/?uri=github.com/platform-mesh/ocm) [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12932/badge)](https://www.bestpractices.dev/projects/12932)
 ![Build Status](https://github.com/platform-mesh/ocm/actions/workflows/ocm.yaml/badge.svg)
 
 ## Description
