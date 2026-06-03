@@ -1,0 +1,72 @@
+name: Mirror Image to OCI
+
+# Copies a container image from an upstream registry into
+# ghcr.io/platform-mesh/ocm/images using crane copy, which streams blobs
+# directly between registries and preserves multi-arch manifest lists.
+# Idempotent: crane copy is content-addressed, same digest = no-op.
+#
+# Used to mirror external images referenced by the OCM constructor so that
+# `ocm transfer` produces a self-contained, air-gapped-installable artifact.
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_image:
+        description: "Source image reference without tag (e.g. docker.io/library/traefik)"
+        required: true
+        type: string
+      version:
+        description: "Image tag (e.g. v3.6.13)"
+        required: true
+        type: string
+      destination_namespace:
+        description: "OCI destination namespace"
+        required: false
+        default: "ghcr.io/platform-mesh/ocm/images"
+        type: string
+  workflow_call:
+    inputs:
+      source_image:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+      destination_namespace:
+        required: false
+        default: "ghcr.io/platform-mesh/ocm/images"
+        type: string
+
+permissions: {}
+
+jobs:
+  mirror:
+    name: Mirror ${{ inputs.source_image }}@${{ inputs.version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      packages: write
+    steps:
+      - name: Install crane
+        uses: imjasonh/setup-crane@31b88efe9de28ae0ffa220711af4b408e4a0e8e5 # v0.4
+
+      - name: Login to GHCR
+        run: |
+          crane auth login ghcr.io \
+            --username "${{ github.actor }}" \
+            --password "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Copy image to OCI
+        run: |
+          set -euo pipefail
+          image_basename=$(basename "${{ inputs.source_image }}")
+          crane copy \
+            "${{ inputs.source_image }}:${{ inputs.version }}" \
+            "${{ inputs.destination_namespace }}/${image_basename}:${{ inputs.version }}"
+
+      - name: Verify image is pullable from OCI
+        run: |
+          set -euo pipefail
+          image_basename=$(basename "${{ inputs.source_image }}")
+          crane manifest \
+            "${{ inputs.destination_namespace }}/${image_basename}:${{ inputs.version }}"
