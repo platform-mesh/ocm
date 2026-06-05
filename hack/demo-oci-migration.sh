@@ -124,9 +124,10 @@ CTF_AFTER="$WORK_DIR/after.ctf"
 REPO_BEFORE='{"baseUrl":"http://'"${REG_HOST}"'","subPath":"before","type":"OCIRegistry"}'
 REPO_AFTER='{"baseUrl":"http://'"${REG_HOST}"'","subPath":"after","type":"OCIRegistry"}'
 
-# Helper: list every artifact tag in the local registry under a given path prefix.
-# Uses the Docker Registry HTTP API v2 directly so we're not relying on OCM to
-# describe what is actually present.
+# Helper: list every artifact tag in the local registry under a given path prefix
+# AND verify each tag's manifest is actually fetchable (HEAD /v2/<repo>/manifests/<tag>
+# must return 200 with a Docker-Content-Digest header). This is what proves the bytes
+# advertised in /v2/_catalog and /v2/<repo>/tags/list are real, not just placeholders.
 list_registry_contents() {
   local label="$1"
   echo "$label"
@@ -138,12 +139,28 @@ list_registry_contents() {
     echo "  (registry is empty)"
     return
   fi
+  local accept='application/vnd.oci.image.manifest.v1+json,application/vnd.oci.image.index.v1+json,application/vnd.docker.distribution.manifest.v2+json,application/vnd.docker.distribution.manifest.list.v2+json'
   while IFS= read -r repo; do
     [[ -z "$repo" ]] && continue
     local tags
     tags=$(curl -sf "http://${REG_HOST}/v2/${repo}/tags/list" \
       | python3 -c "import json,sys; d=json.load(sys.stdin); print(' '.join(d.get('tags') or []))" 2>/dev/null || true)
-    echo "  ${repo}:  ${tags:-(no tags)}"
+    if [[ -z "$tags" ]]; then
+      echo "  ${repo}:  (no tags)"
+      continue
+    fi
+    echo "  ${repo}:"
+    for tag in $tags; do
+      local headers status digest
+      headers=$(curl -sI -H "Accept: ${accept}" "http://${REG_HOST}/v2/${repo}/manifests/${tag}" || true)
+      status=$(echo "$headers" | awk 'NR==1 {print $2}')
+      digest=$(echo "$headers" | awk -F': ' 'tolower($1)=="docker-content-digest" {print $2}' | tr -d '\r\n ')
+      if [[ "$status" == "200" && -n "$digest" ]]; then
+        echo "    ${tag}  ✓ HTTP ${status}  ${digest}"
+      else
+        echo "    ${tag}  ✗ HTTP ${status:-?}  digest=${digest:-<missing>}"
+      fi
+    done
   done <<< "$repos"
 }
 
