@@ -62,9 +62,9 @@ jobs:
       packages: write
     env:
       # Third-party dependency versions
-      KCP_OPERATOR_CHART_VERSION: "0.7.2"
-      KCP_OPERATOR_IMAGE_VERSION: "v0.7.2"
-      KCP_VERSION: "v0.31.1"
+      KCP_OPERATOR_CHART_VERSION: "0.7.4"
+      KCP_OPERATOR_IMAGE_VERSION: "v0.8.0"
+      KCP_VERSION: "v0.32.0"
       INIT_AGENT_CHART_VERSION: "0.2.0"
       INIT_AGENT_IMAGE_VERSION: "v0.2.0"
       PM_KEYCLOAK_VERSION: "26.6.0"
@@ -80,9 +80,8 @@ jobs:
       CERT_MANAGER_VERSION: "v1.20.1"
       CNPG_OPERATOR_CHART_VERSION: "0.28.0"
       CNPG_OPERATOR_IMAGE_VERSION: "1.29.0"
-      PROMETHEUS_OPERATOR_CRDS_VERSION: "28.0.1"
+      PROMETHEUS_OPERATOR_CRDS_VERSION: "29.0.0"
       KUBE_PROMETHEUS_STACK_VERSION: "27.0.0"
-      OPENTELEMETRY_OPERATOR_VERSION: "0.110.0"
       # PM-stamped component descriptor versions for third-party components.
       # Bump these to publish a new descriptor without touching resource versions.
       PM_GATEWAY_API_VERSION: "0.0.1"
@@ -96,6 +95,7 @@ jobs:
       PM_PROMETHEUS_OPERATOR_CRDS_VERSION: "0.0.1"
       PM_KUBE_PROMETHEUS_STACK_VERSION: "0.0.1"
       PM_OPENTELEMETRY_OPERATOR_VERSION: "0.0.1"
+      OPENTELEMETRY_OPERATOR_VERSION: "0.114.1"
     steps:
       - name: Setup yq@latest
         run: |
