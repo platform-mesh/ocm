@@ -1,3 +1,6 @@
+> [!NOTE]
+> This repository is archived, the publishing machinery was migrated to the [helm-charts](https://github.com/platform-mesh/helm-charts) repository as per https://github.com/platform-mesh/architecture/pull/44.
+
 > [!WARNING]
 > This Repository is under development and not ready for productive use. It is in an alpha stage. That means APIs and concepts may change on short notice including breaking changes or complete removal of apis.
 
